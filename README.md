@@ -1,6 +1,21 @@
 # vfiogpu-voidlinux-ressources
 Scripts and tools to drive a voidlinux system with Qemu/KVM guest GPU passthrough
-Installing and setting up qemu/kvm, libvirt, and virt-manager can be done through ./gettingstarted.md
+
+## installing and setting up virt-manager
+this guide follows the instruction method using the gui virt-manager package
+> minimal solution with only qemu & libvirt in progress
+```
+# xbps-install -S virtmanager libvirt qemu
+```
+create symlinks for libvirt deamons in the services directory
+```
+# ln -s /etc/sv/virtlockd /var/service
+# ln -s /etc/sv/virtlogd /var/service
+# ln -s /etc/sv/libvirtd /var/service
+```
+either reboot the system or run `# sv up <deamon>` for every deamon (ie. virtlockd)
+
+setting up vfio gpu drivers is the next step before creating the vm
 
 ## setting up vfio pci ids
 run `./scripts/iommu.sh` on the host system to display devices with IOMMU groups and their respective pci.ids
@@ -9,14 +24,15 @@ $ bash ./iommu.sh
 [...]
 IOMMU Group 22 04:00.0 VGA compatible controller [0300]: NVIDIA Corporation GP107 [GeForce GTX 1050 Ti] [10de:1c82] (rev a1)
 IOMMU Group 22 04:00.1 Audio device [0403]: NVIDIA Corporation GP107GL High Definition Audio Controller [10de:0fb9] (rev a1)
+IOMMU Group 23 ...
 [...]
 ```
-> All the devices in the IOMMU group of my target GPU need to be bound to the vfio driver during boot.
+> All the devices in the IOMMU group 22 of my target GPU need to be bound to the vfio driver during boot.
 >
-Take note of the pci.ids at the end of the lines of all devices in the target's IOMMU group, ie:
+Take note of the pci.ids at the end of the lines of all devices in the target's IOMMU group, here:
 `[10de:1c82]` & `[10de:0fb9]`
 ## include those devices into the vfio-pci.ids kernel parameter
-edit the `GRUB_CMDLINE_LINUX_DEFAULT=` line by adding `vfio-pci.ids=<ID>,<ID2>` for example:
+edit the `GRUB_CMDLINE_LINUX_DEFAULT=` line in `/etc/default/grub` by adding `vfio-pci.ids=<ID>,<ID2>` for example:
 ```
 GRUB_CMDLINE_LINUX_DEFAULT="vfio-pci.ids=10de:1c82,10de:0fb9 loglevel=4"
 ```
@@ -26,10 +42,9 @@ don't forget to update grub
 ```
 
 ## ensuring the vfio driver is loaded early at boot
-copy the `./20-vfio.conf` file into `/etc/dracut.conf.d/20-vfio.conf`
-or edit the file with 
+modify `/etc/dracut.conf.d/20-vfio.conf` with a text editor:
 ```
-force_drivers+=" vfio_pci vfio vfio_iommu_type1 "
+# echo 'force_drivers+=" vfio_pci vfio vfio_iommu_type1 "' > /etc/dracut.conf.d/20-vfio.conf
 ```
 regenerate the initramfs using dracut:
 ```
