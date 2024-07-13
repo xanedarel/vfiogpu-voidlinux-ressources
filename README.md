@@ -58,7 +58,7 @@ or run
 
 ## reboot your device to ensure that the GPU is bound to the VFIO drivers
 ```
-# lspci -k | grep -E -A 2 'NVIDIA'
+# lspci -k | grep -A 2 'NVIDIA'
 ```
 > replace 'NVIDIA' with 'AMD' or your GPU manufacturer.
 > 
