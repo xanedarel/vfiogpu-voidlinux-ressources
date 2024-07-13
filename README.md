@@ -44,7 +44,7 @@ don't forget to update grub
 ## ensuring the vfio driver is loaded early at boot
 modify `/etc/dracut.conf.d/20-vfio.conf` with a text editor:
 ```
-# echo 'force_drivers+=" vfio_pci vfio vfio_iommu_type1 "' > /etc/dracut.conf.d/20-vfio.conf
+force_drivers+=" vfio_pci vfio vfio_iommu_type1 "
 ```
 regenerate the initramfs using dracut:
 ```
