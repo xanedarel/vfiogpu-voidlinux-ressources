@@ -1,5 +1,6 @@
 # vfiogpu-voidlinux-ressources
-Scripts and tools to drive a voidlinux system with Qemu/KVM guest GPU passthrough
+Scripts and tools to drive a voidlinux system with Qemu/KVM guest GPU passthrough.
+These tools and scripts will allow you to use a bare metal GPU inside a Windows, Linux or macOS VM.
 
 ## installing and setting up virt-manager
 this guide follows the instruction method using the gui virt-manager package
