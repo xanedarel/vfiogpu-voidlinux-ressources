@@ -7,7 +7,7 @@ grubd=40_custom
 cp /etc/grub.d/$grubd /home/$user/.cache/$grubd
 varcurrentlinux=$(ls -1 /boot/vmlinuz-* | awk -F '-' '{print $2}' | sort -V | tail -n 1)
 echo "Latest kernel found : $varcurrentlinux"
-sed -i "s/[0-9]\.[0-9]\.[0-9]*_[0-9]/$varcurrentlinux/g" /etc/grub.d/40_custom
+sed -i "s/[0-9]\.[0-9]\.[0-9]*_[0-9]/$varcurrentlinux/g" /etc/grub.d/$grubd
 update-grub
 
 # >
