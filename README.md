@@ -1,3 +1,4 @@
+## These scripts are deprecated, please refer to xanedarel/banepanel-scripts/vfio-assisted-config.sh
 # vfiogpu-voidlinux-ressources
 Scripts and tools to drive a voidlinux system with Qemu/KVM guest GPU passthrough.
 These tools and scripts will allow you to use a bare metal GPU inside a Windows, Linux or macOS VM.
